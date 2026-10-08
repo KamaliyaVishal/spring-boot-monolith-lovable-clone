@@ -42,6 +42,8 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     @Transactional(rollbackFor = Exception.class)
     public ProjectMemberResponse inviteMember(Long projectId, InviteMemberRequest request, Long userId) {
         Project project = getAccessibleProjectById(projectId, userId);
+        if (!project.getOwner().getId().equals(userId))
+            throw new RuntimeException("Not allowed");
 
         User invitee = userRepository.findByUsername(request.username()).orElseThrow();
         if (invitee.getId().equals(userId))
@@ -74,8 +76,16 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     }
 
     @Override
-    public ProjectMemberResponse deleteProjectMember(Long projectId, Long memberId, Long userId) {
-        return null;
+    public void deleteProjectMember(Long projectId, Long memberId, Long userId) {
+        Project project = getAccessibleProjectById(projectId, userId);
+        if (!project.getOwner().getId().equals(userId))
+            throw new RuntimeException("Not allowed");
+
+        ProjectMemberId projectMemberId = new ProjectMemberId(projectId, memberId);
+        if (!projectMemberRepository.existsById(projectMemberId))
+            throw new RuntimeException("Can't find provided member");
+
+        projectMemberRepository.deleteById(projectMemberId);
     }
 
     public Project getAccessibleProjectById(Long projectId, Long userId) {
