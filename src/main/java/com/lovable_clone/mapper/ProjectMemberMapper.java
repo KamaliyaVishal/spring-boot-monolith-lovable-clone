@@ -20,5 +20,11 @@ public interface ProjectMemberMapper {
     @Mapping(target = "username", source = "user.username")
     @Mapping(target = "name", source = "user.name")
     @Mapping(target = "role", source = "projectRole")
-    List<ProjectMemberResponse> toProjectMemberResponseFromMember(List<ProjectMember> projectMembers);
+    List<ProjectMemberResponse> toListOfProjectMemberResponse(List<ProjectMember> projectMembers);
+
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "username", source = "user.username")
+    @Mapping(target = "name", source = "user.name")
+    @Mapping(target = "role", source = "projectRole")
+    ProjectMemberResponse toProjectMemberResponse(ProjectMember projectMembers);
 }
