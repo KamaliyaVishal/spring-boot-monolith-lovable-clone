@@ -1,8 +1,8 @@
 package com.lovable_clone.service.impl;
 
-import com.codingshuttle.projects.lovable_clone.dto.subscription.PlanLimitsResponse;
-import com.codingshuttle.projects.lovable_clone.dto.subscription.UsageTodayResponse;
-import com.codingshuttle.projects.lovable_clone.service.UsageService;
+import com.lovable_clone.dto.billing.UsageTodayResponse;
+import com.lovable_clone.dto.usage.PlanLimitsResponse;
+import com.lovable_clone.service.UsageService;
 import org.springframework.stereotype.Service;
 
 @Service
