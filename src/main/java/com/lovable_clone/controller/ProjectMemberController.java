@@ -4,7 +4,9 @@ import com.lovable_clone.dto.projectmember.InviteMemberRequest;
 import com.lovable_clone.dto.projectmember.ProjectMemberResponse;
 import com.lovable_clone.dto.projectmember.UpdateMemberRoleRequest;
 import com.lovable_clone.service.ProjectMemberService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/projects/{projectId}/members")
 @RequiredArgsConstructor
+@RequestMapping("/api/projects/{projectId}/members")
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ProjectMemberController {
 
-    private final ProjectMemberService projectMemberService;
+    ProjectMemberService projectMemberService;
 
     @GetMapping
     public ResponseEntity<List<ProjectMemberResponse>> getProjectMembers(@PathVariable Long projectId) {
