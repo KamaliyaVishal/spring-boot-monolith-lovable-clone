@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -40,11 +41,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectResponse getUserProjectById(Long id, Long userId) {
-        Project project = projectRepository.findAccessibleProjectById(id, userId).orElseThrow();
+        Project project = getAccessibleProjectById(id, userId);
         return projectMapper.toProjectResponse(project);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ProjectResponse createProject(ProjectRequest request, Long userId) {
         User owner = userRepository.findById(userId).orElseThrow();
 
@@ -58,15 +60,23 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ProjectResponse updateProject(Long id, ProjectRequest request, Long userId) {
-        Project project = projectRepository.findAccessibleProjectById(id, userId).orElseThrow();
+        Project project = getAccessibleProjectById(id, userId);
         project.setName(request.name());
         project = projectRepository.save(project);
         return projectMapper.toProjectResponse(project);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void softDelete(Long id, Long userId) {
+        Project project = getAccessibleProjectById(id, userId);
+        project.setDeletedAt(Instant.now());
+        projectRepository.save(project);
+    }
 
+    private Project getAccessibleProjectById(Long id, Long userId) {
+        return projectRepository.findAccessibleProjectById(id, userId).orElseThrow();
     }
 }
