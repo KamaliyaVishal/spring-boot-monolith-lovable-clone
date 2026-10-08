@@ -22,7 +22,7 @@ import java.time.Instant;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ProjectMemberServiceImpl implements ProjectMemberService {
@@ -39,6 +39,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ProjectMemberResponse inviteMember(Long projectId, InviteMemberRequest request, Long userId) {
         Project project = getAccessibleProjectById(projectId, userId);
 
@@ -63,8 +64,13 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ProjectMemberResponse updateMemberRole(Long projectId, Long memberId, UpdateMemberRoleRequest request, Long userId) {
-        return null;
+        ProjectMemberId projectMemberId = new ProjectMemberId(projectId, memberId);
+        ProjectMember projectMember = projectMemberRepository.findById(projectMemberId).orElseThrow();
+        projectMember.setProjectRole(request.role());
+        projectMemberRepository.save(projectMember);
+        return projectMemberMapper.toProjectMemberResponse(projectMember);
     }
 
     @Override
