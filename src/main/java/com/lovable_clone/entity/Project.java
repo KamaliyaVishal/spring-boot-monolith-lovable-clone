@@ -5,7 +5,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.Instant;
 
@@ -30,6 +29,7 @@ public class Project {
     @JoinColumn(name = "owner_id", nullable = false)
     User owner;
 
+    @Builder.Default
     Boolean isPublic = false;
 
     @CreationTimestamp
