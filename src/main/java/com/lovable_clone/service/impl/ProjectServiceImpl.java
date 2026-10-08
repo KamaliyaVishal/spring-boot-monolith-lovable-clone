@@ -3,20 +3,19 @@ package com.lovable_clone.service.impl;
 import com.lovable_clone.dto.project.ProjectRequest;
 import com.lovable_clone.dto.project.ProjectResponse;
 import com.lovable_clone.dto.project.ProjectSummaryResponse;
-import com.lovable_clone.entity.Project;
 import com.lovable_clone.service.ProjectService;
-import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@Transactional
 public class ProjectServiceImpl implements ProjectService {
 
     @Override
