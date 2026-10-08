@@ -72,6 +72,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional(rollbackFor = Exception.class)
     public void softDelete(Long id, Long userId) {
         Project project = getAccessibleProjectById(id, userId);
+        if (!project.getOwner().getId().equals(userId))
+            throw new RuntimeException("You are not allowed to delete the project");
         project.setDeletedAt(Instant.now());
         projectRepository.save(project);
     }
